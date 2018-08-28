@@ -1,5 +1,6 @@
 package com.memorial;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -80,8 +82,6 @@ public class ListTaskActivity extends AppCompatActivity implements AddTaskDialog
             public void onClick(View v) {
 
                 openDialog();
-                //Add new task
-                //Random email
 
             }
         });
@@ -189,10 +189,20 @@ public class ListTaskActivity extends AppCompatActivity implements AddTaskDialog
                 final EditText edtTitle = new EditText(ListTaskActivity.this);
                 edtTitle.setText(task.getTitle());
                 edtTitle.setHint("Task Title");
+                final EditText edtDetail = new EditText(ListTaskActivity.this);
+                edtDetail.setText(task.getDetail());
+                edtDetail.setHint("Task Detail");
+
+                LinearLayout layout = new LinearLayout(ListTaskActivity.this);
+                layout.setOrientation(LinearLayout.VERTICAL);
+
+                layout.addView(edtTitle);
+                layout.addView(edtDetail);
+
+
                 new AlertDialog.Builder(ListTaskActivity.this)
-                        .setTitle("Edit")
-                        .setMessage("Edit task title")
-                        .setView(edtTitle)
+                        .setTitle("Update Task")
+                        .setView(layout)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -200,6 +210,7 @@ public class ListTaskActivity extends AppCompatActivity implements AddTaskDialog
                                     return;
                                 else{
                                     task.setTitle(edtTitle.getText().toString());
+                                    task.setDetail(edtDetail.getText().toString());
                                     updateTask(task);
                                 }
                             }
@@ -308,6 +319,9 @@ public class ListTaskActivity extends AppCompatActivity implements AddTaskDialog
 
     @Override
     public void applyTexts(final String title, final String detail) {
+
+        //Add new task
+
         Disposable disposable = io.reactivex.Observable.create(new ObservableOnSubscribe<Object>() {
             @Override
             public void subscribe(ObservableEmitter<Object> emitter) throws Exception {
